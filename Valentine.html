@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Raghu Veer ❤️ Angel</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(140,90,255,0.18), transparent 45%),
+    radial-gradient(circle at 70% 80%, rgba(255,90,130,0.18), transparent 45%),
+    linear-gradient(180deg, #050505, #000);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: white;
+}
+
+/* MAIN CARD */
+.card {
+  position: relative;
+  background: rgba(12,12,12,0.75);
+  backdrop-filter: blur(14px);
+  border-radius: 26px;
+  padding: 42px 28px;
+  max-width: 360px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+  z-index: 3;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 6px;
+  background: linear-gradient(90deg, #ff5c8a, #c77dff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h2 {
+  font-size: 14px;
+  font-weight: 400;
+  color: #aaa;
+  margin-bottom: 26px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #eee;
+  margin-bottom: 34px;
+}
+
+/* BUTTONS */
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  position: relative;
+}
+
+button {
+  padding: 14px 30px;
+  border-radius: 40px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#yesBtn {
+  background: linear-gradient(135deg, #ff4d6d, #b5179e);
+  color: white;
+}
+
+/* HAND POINTER */
+#pointer {
+  position: absolute;
+  left: -62px;
+  top: 6px;
+  font-size: 42px;
+  display: none;
+  animation: pointMove 1.1s infinite ease-in-out;
+}
+
+@keyframes pointMove {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(20px); }
+  100% { transform: translateX(0); }
+}
+
+/* OVERLAY + CAMERA ZOOM */
+#overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  overflow: hidden;
+  transform: scale(1);
+}
+
+.zoom {
+  animation: cameraZoom 3.8s ease forwards;
+}
+
+@keyframes cameraZoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.08); }
+}
+
+/* HEART BREAK */
+.heart-piece {
+  position: absolute;
+  font-size: 140px;
+  top: 35%;
+  animation: slowFall 3.8s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+/* Jagged uneven crack */
+.left {
+  clip-path: polygon(
+    0% 0%, 47% 0%, 44% 18%, 50% 32%,
+    42% 50%, 48% 68%, 40% 100%, 0% 100%
+  );
+}
+
+.right {
+  clip-path: polygon(
+    53% 0%, 100% 0%, 100% 100%, 58% 100%,
+    62% 72%, 54% 50%, 60% 30%, 55% 18%
+  );
+}
+
+@keyframes slowFall {
+  0%   { transform: translateY(0); opacity: 1; }
+  25%  { transform: translateY(10px); }
+  60%  { transform: translateY(55vh); }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+
+/* DENIAL */
+.denied {
+  text-align: center;
+  max-width: 320px;
+  opacity: 0;
+  animation: fadeIn 1.4s ease forwards;
+  animation-delay: 2.4s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* WINK EMOJI */
+#wink {
+  position: fixed;
+  font-size: 64px;
+  display: none;
+  z-index: 6;
+  animation: winkZoom 1.8s ease forwards;
+}
+
+@keyframes winkZoom {
+  0%   { transform: scale(0); opacity: 0; }
+  40%  { transform: scale(1); opacity: 1; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Angel</h1>
+  <h2>from Raghu Veer</h2>
+
+  <p>
+    I tried keeping this casual.<br>
+    It didn’t work.<br><br>
+
+    Somewhere between smiles and pauses,
+    you became the place my thoughts rest.
+    <br><br>
+    Will you be my Valentine?
+  </p>
+
+  <div class="buttons">
+    <button id="yesBtn" onclick="yes()">Yes ❤️</button>
+    <div id="pointer">👉</div>
+    <button id="noBtn">No 🙃</button>
+  </div>
+</div>
+
+<div id="overlay"></div>
+<div id="wink">😉</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const overlay = document.getElementById("overlay");
+const pointer = document.getElementById("pointer");
+const wink = document.getElementById("wink");
+const card = document.getElementById("card");
+
+/* Desktop dodge */
+document.addEventListener("mousemove", e => {
+  if (window.innerWidth > 768) {
+    const r = noBtn.getBoundingClientRect();
+    const d = Math.hypot(
+      e.clientX - (r.left + r.width/2),
+      e.clientY - (r.top + r.height/2)
+    );
+    if (d < 90) {
+      noBtn.style.transform =
+        `translate(${Math.random()*120-60}px, ${Math.random()*60-30}px)`;
+    }
+  }
+});
+
+/* NO FLOW */
+noBtn.addEventListener("click", () => {
+  overlay.style.display = "flex";
+  overlay.classList.add("zoom");
+  overlay.innerHTML = `
+    <div class="heart-piece left">❤️</div>
+    <div class="heart-piece right">❤️</div>
+    <div class="denied">
+      <h1>Request Denied 🚫</h1>
+      <p>
+        The heart you’re trying to exit is permanently closed.<br><br>
+        A lifelong bond has already been signed.
+      </p>
+    </div>
+  `;
+
+  setTimeout(() => {
+    overlay.style.display = "none";
+    overlay.classList.remove("zoom");
+    wink.style.display = "block";
+    setTimeout(() => {
+      pointer.style.display = "block";
+    }, 1800);
+  }, 4300);
+});
+
+function yes() {
+  wink.style.display = "none";
+  pointer.style.display = "none";
+  card.innerHTML = `
+    <h1>Angel ❤️</h1>
+    <p>
+      You knew where this was going.<br><br>
+
+      Not because you were pushed —
+      but because it already felt right.
+      <br><br>
+
+      No drama. No pressure.<br>
+      Just choosing each other,
+      one day at a time.
+      <br><br>
+      Happy Valentine’s,<br>
+      yours — Raghu Veer ✨
+    </p>
+  `;
+}
+</script>
+
+</body>
+</html>
